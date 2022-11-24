@@ -13,9 +13,10 @@ then
     org="phoenixframework"
 fi
 
-if [ $(uname) == "Darwin" ]
-then
+if [[ "$OSTYPE" =~ ^darwin ]];then
     soext="dylib"
+elif [[ "$OSTYPE" =~ ^msys ]];then
+    soext="dll"
 else
     soext="so"
 fi
