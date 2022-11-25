@@ -56,9 +56,9 @@ fi
 # Link.
 if test -f scanner.cc
 then
-    c++ -fPIC -shared *.o -o "libtree-sitter-${lang}.${soext}"
+    c++ -fPIC -static -shared *.o -o "libtree-sitter-${lang}.${soext}"
 else
-    cc -fPIC -shared *.o -o "libtree-sitter-${lang}.${soext}"
+    cc -fPIC -static -shared *.o -o "libtree-sitter-${lang}.${soext}"
 fi
 
 # Copy out.
