@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export platform=windows
 languages=(
     'c'
     'cpp'
@@ -20,3 +21,5 @@ for language in "${languages[@]}"
 do
     ./build.sh $language
 done
+
+zip -r "libs-${platform}-x64.zip" dist

@@ -33,10 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build
-        run: |
-          ./batch.sh
-          export platform=$(echo ${{ runner.os }} | awk '{print tolower($0)}')
-          zip -r "libs-${platform}-x64.zip" dist
+        run: .\batch.cmd
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
