@@ -19,12 +19,14 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
+    env:
+      MSYS2_DIR: C:\msys64
     strategy:
       fail-fast: true
       matrix:
+        include: [{ msystem: MINGW64, arch: x86_64 }]
         os:
-          - macos-latest
-          - ubuntu-latest
+          - windows-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
