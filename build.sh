@@ -3,15 +3,92 @@
 lang=$1
 org="tree-sitter"
 
-if [ "${lang}" == "elixir" ]
-then
-    org="elixir-lang"
-fi
+case "${lang}" in
+    "dockerfile")
+        org="camdencheek"
+        ;;
+    "cmake")
+        org="uyha"
+        ;;
+    "typescript")
+        sourcedir="typescript/src"
+        ;;
+    "tsx")
+        repo="tree-sitter-typescript"
+        sourcedir="tsx/src"
+        ;;
+    "elisp")
+        org="Wilfred"
+        ;;
+    "elixir")
+        org="elixir-lang"
+        ;;
+    "heex")
+        org="phoenixframework"
+        ;;
+    "glsl")
+        org="theHamsta"
+        ;;
+    "make")
+        org="alemuller"
+        ;;
+    "markdown")
+        org="ikatyang"
+        ;;
+    "org")
+        org="milisims"
+        ;;
+    "perl")
+        org="ganezdragon"
+        ;;
+    "proto")
+        org="mitchellh"
+        ;;
+    "surface")
+        org="connorlay"
+        ;;
+    "sql")
+        org="DerekStride"
+        branch="gh-pages"
+        ;;
+    "toml")
+        org="ikatyang"
+        ;;
+    "vhdl")
+        org="alemuller"
+        ;;
+    "wgsl")
+        org="mehmetoguzderin"
+        ;;
+    "yaml")
+        org="ikatyang"
+        ;;
+    "go-mod")
+        org="camdencheek"
+        ;;
+    "clojure")
+        org="dannyfreeman"
+        ;;
+    "scss")
+        org="serenadeai"
+        ;;
+    "janet-simple")
+        org="sogaiu"
+        ;;
+    "dart")
+        org="ast-grep"
+        ;;
+    "souffle")
+        org="chaosite"
+        ;;
+    "kotlin")
+        org="fwcd"
+        ;;
+    "lua")
+        org="MunifTanjim"
+        ;;
 
-if [ "${lang}" == "heex" ]
-then
-    org="phoenixframework"
-fi
+esac
 
 if [[ "$OSTYPE" =~ ^darwin ]];then
     soext="dylib"
