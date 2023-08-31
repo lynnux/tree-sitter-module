@@ -1,7 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -u
+set -e
 
 lang=$1
+topdir="$PWD"
+
+if [ "$(uname)" == "Darwin" ]
+then
+    soext="dylib"
+elif uname | grep -q "MINGW" > /dev/null
+then
+    soext="dll"
+else
+    soext="so"
+fi
+
+echo "Building ${lang}"
+
+### Retrieve sources
+
 org="tree-sitter"
+repo="tree-sitter-${lang}"
+sourcedir="src"
+branch=""
 
 case "${lang}" in
     "dockerfile")
@@ -90,36 +112,21 @@ case "${lang}" in
 
 esac
 
-if [[ "$OSTYPE" =~ ^darwin ]];then
-    soext="dylib"
-elif [[ "$OSTYPE" =~ ^msys ]];then
-    soext="dll"
+if [ -z "$branch" ]
+then
+    git clone "https://github.com/${org}/${repo}.git" \
+       --depth 1 --quiet "${lang}"
 else
-    soext="so"
+    git clone "https://github.com/${org}/${repo}.git" \
+        --single-branch --branch "${branch}" --quiet "${lang}"
 fi
+# We have to go into the source directory to compile, because some
+# C files refer to files like "../../common/scanner.h".
+cd "${lang}/${sourcedir}"
 
-echo "Building ${lang}"
+### Build
 
-# Retrieve sources.
-git clone "https://github.com/${org}/tree-sitter-${lang}.git" \
-    --depth 1 --quiet
-
-if [ "${lang}" == "typescript" ]
-then
-    lang="typescript/tsx"
-fi
-cp tree-sitter-lang.in "tree-sitter-${lang}/src"
-cp emacs-module.h "tree-sitter-${lang}/src"
-cp "tree-sitter-${lang}/grammar.js" "tree-sitter-${lang}/src"
-cd "tree-sitter-${lang}/src"
-
-if [ "${lang}" == "typescript/tsx" ]
-then
-    lang="tsx"
-fi
-
-# Build.
-cc -c -I. parser.c
+cc -fPIC -c -I. parser.c
 # Compile scanner.c.
 if test -f scanner.c
 then
@@ -138,21 +145,9 @@ else
     cc -fPIC -static -shared *.o -o "libtree-sitter-${lang}.${soext}"
 fi
 
-# Copy out.
+### Copy out
 
-if [ "${lang}" == "tsx" ]
-then
-    cp "libtree-sitter-${lang}.${soext}" ..
-    cd ..
-fi
-
-mkdir -p ../../dist
-cp "libtree-sitter-${lang}.${soext}" ../../dist
-cd ../../
-if [ "${lang}" == "tsx" ]
-then
-    rm -rf "tree-sitter-typescript"
-else
-    rm -rf "tree-sitter-${lang}"
-fi
-
+mkdir -p "${topdir}/dist"
+cp "libtree-sitter-${lang}.${soext}" "${topdir}/dist"
+cd "${topdir}"
+rm -rf "${lang}"
